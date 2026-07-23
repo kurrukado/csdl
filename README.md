@@ -1,3 +1,4 @@
+```sql
 CREATE DATABASE QuanLyHocTap;
 GO
 
@@ -187,3 +188,4 @@ SELECT
     ROUND(RAND(CHECKSUM(NEWID()))*4+6,2),
     ROUND(RAND(CHECKSUM(NEWID()))*4+6,2)
 FROM DangKyHoc;
+```
