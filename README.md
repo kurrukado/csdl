@@ -5,47 +5,9 @@ GO
 USE QuanLyHocTap;
 GO
 
-CREATE TABLE SinhVien
-(
-    MaSV CHAR(6) PRIMARY KEY,
-    HoTen NVARCHAR(100) NOT NULL,
-    NgaySinh DATE,
-    GioiTinh NVARCHAR(5),
-
-    NoiSinh NVARCHAR(100),
-    QueQuan NVARCHAR(100),
-
-    MaQT INT,
-    MaDT INT,
-    MaTG INT,
-
-    TPXuatThan NVARCHAR(100),
-
-    NgayVaoDoan DATE,
-    NgayVaoDang DATE,
-
-    NoiThuongTru NVARCHAR(200),
-
-    MaXa INT,
-    MaTinh INT,
-
-    NoiOHienNay NVARCHAR(200),
-
-    FOREIGN KEY(MaQT)
-        REFERENCES QuocTich(MaQT),
-
-    FOREIGN KEY(MaDT)
-        REFERENCES DanToc(MaDT),
-
-    FOREIGN KEY(MaTG)
-        REFERENCES TonGiao(MaTG),
-
-    FOREIGN KEY(MaXa)
-        REFERENCES XaPhuong(MaXa),
-
-    FOREIGN KEY(MaTinh)
-        REFERENCES TinhThanh(MaTinh)
-);
+-----------------------------------------------------
+-- DANH MỤC
+-----------------------------------------------------
 
 CREATE TABLE QuocTich
 (
@@ -77,115 +39,169 @@ CREATE TABLE XaPhuong
     TenXa NVARCHAR(100) NOT NULL,
     MaTinh INT NOT NULL,
 
-    FOREIGN KEY(MaTinh)
+    FOREIGN KEY (MaTinh)
         REFERENCES TinhThanh(MaTinh)
 );
+
+-----------------------------------------------------
+-- SINH VIÊN
+-----------------------------------------------------
+
+CREATE TABLE SinhVien
+(
+    MaSV CHAR(6) PRIMARY KEY,
+    HoTen NVARCHAR(100) NOT NULL,
+    NgaySinh DATE,
+    GioiTinh NVARCHAR(5),
+
+    NoiSinh NVARCHAR(100),
+    QueQuan NVARCHAR(100),
+
+    MaQT INT,
+    MaDT INT,
+    MaTG INT,
+
+    TPXuatThan NVARCHAR(100),
+
+    NgayVaoDoan DATE,
+    NgayVaoDang DATE,
+
+    NoiThuongTru NVARCHAR(200),
+
+    MaXa INT,
+    MaTinh INT,
+
+    NoiOHienNay NVARCHAR(200),
+
+    FOREIGN KEY (MaQT) REFERENCES QuocTich(MaQT),
+    FOREIGN KEY (MaDT) REFERENCES DanToc(MaDT),
+    FOREIGN KEY (MaTG) REFERENCES TonGiao(MaTG),
+    FOREIGN KEY (MaXa) REFERENCES XaPhuong(MaXa),
+    FOREIGN KEY (MaTinh) REFERENCES TinhThanh(MaTinh)
+);
+
+-----------------------------------------------------
+-- MÔN HỌC
+-----------------------------------------------------
 
 CREATE TABLE MonHoc
 (
     MaMH CHAR(5) PRIMARY KEY,
-    TenMH NVARCHAR(100),
-    SoTinChi INT
+    TenMH NVARCHAR(100) NOT NULL,
+    SoTinChi INT NOT NULL
 );
 
-CREATE TABLE HocKy
-(
-    MaHK CHAR(4) PRIMARY KEY,
-    TenHocKy NVARCHAR(50),
-    NamHoc VARCHAR(9)
-);
+-----------------------------------------------------
+-- HỌC (BẢNG LIÊN KẾT)
+-----------------------------------------------------
 
-CREATE TABLE DangKyHoc
+CREATE TABLE Hoc
 (
-    MaDK INT IDENTITY(1,1) PRIMARY KEY,
-    MaSV CHAR(6),
-    MaMH CHAR(5),
-    MaHK CHAR(4),
+    MaHoc INT IDENTITY(1,1) PRIMARY KEY,
 
-    FOREIGN KEY(MaSV) REFERENCES SinhVien(MaSV),
-    FOREIGN KEY(MaMH) REFERENCES MonHoc(MaMH),
-    FOREIGN KEY(MaHK) REFERENCES HocKy(MaHK)
-);
+    MaSV CHAR(6) NOT NULL,
+    MaMH CHAR(5) NOT NULL,
 
-CREATE TABLE DiemThi
-(
-    MaDK INT PRIMARY KEY,
+    HocKy NVARCHAR(20),
+    NamHoc VARCHAR(9),
 
     DiemA1 DECIMAL(4,2),
     DiemA2 DECIMAL(4,2),
     DiemA3 DECIMAL(4,2),
 
-    FOREIGN KEY(MaDK) REFERENCES DangKyHoc(MaDK)
-);
+    FOREIGN KEY (MaSV)
+        REFERENCES SinhVien(MaSV),
 
-INSERT INTO MonHoc VALUES
+    FOREIGN KEY (MaMH)
+        REFERENCES MonHoc(MaMH)
+);
+GO
+
+-----------------------------------------------------
+-- DỮ LIỆU DANH MỤC
+-----------------------------------------------------
+
+INSERT INTO QuocTich(TenQT)
+VALUES (N'Việt Nam');
+
+INSERT INTO DanToc(TenDT)
+VALUES (N'Kinh');
+
+INSERT INTO TonGiao(TenTG)
+VALUES (N'Không');
+
+INSERT INTO TinhThanh(TenTinh)
+VALUES
+(N'Khánh Hòa'),
+(N'Đà Nẵng'),
+(N'Hà Nội');
+
+INSERT INTO XaPhuong(TenXa,MaTinh)
+VALUES
+(N'Vĩnh Hải',1),
+(N'Hải Châu',2),
+(N'Cầu Giấy',3);
+
+-----------------------------------------------------
+-- MÔN HỌC
+-----------------------------------------------------
+
+INSERT INTO MonHoc
+VALUES
 ('MH001',N'Cơ sở dữ liệu',3),
 ('MH002',N'Lập trình C#',3),
 ('MH003',N'Cấu trúc dữ liệu',3),
 ('MH004',N'Mạng máy tính',3),
 ('MH005',N'Hệ điều hành',3);
 
-INSERT INTO HocKy VALUES
-('HK01',N'Học kỳ 1','2025-2026'),
-('HK02',N'Học kỳ 2','2025-2026');
+-----------------------------------------------------
+-- SINH VIÊN
+-----------------------------------------------------
 
-INSERT INTO SinhVien VALUES
-('240001',N'Nguyễn Văn An','2005-01-15',N'Nam',N'Khánh Hòa',N'Nha Trang',N'Việt Nam',N'Kinh',N'Không',N'Nha Trang','2020-09-15',NULL,N'Nha Trang',N'Vĩnh Hải',N'Khánh Hòa',N'Bình Dương'),
+INSERT INTO SinhVien
+VALUES
+('240001',N'Nguyễn Văn An','2005-01-15',N'Nam',
+N'Khánh Hòa',N'Nha Trang',
+1,1,1,
+N'Nha Trang',
+'2020-09-15',NULL,
+N'Nha Trang',
+1,1,
+N'Bình Dương'),
 
-('240002',N'Trần Thị Bình','2005-03-20',N'Nữ',N'Đà Nẵng',N'Đà Nẵng',N'Việt Nam',N'Kinh',N'Không',N'Đà Nẵng','2020-09-15',NULL,N'Đà Nẵng',N'Hải Châu',N'Đà Nẵng',N'Bình Dương'),
+('240002',N'Trần Thị Bình','2005-03-20',N'Nữ',
+N'Đà Nẵng',N'Đà Nẵng',
+1,1,1,
+N'Đà Nẵng',
+'2020-09-15',NULL,
+N'Đà Nẵng',
+2,2,
+N'Bình Dương'),
 
-('240003',N'Lê Quốc Cường','2005-07-11',N'Nam',N'Hà Nội',N'Hà Nội',N'Việt Nam',N'Kinh',N'Không',N'Hà Nội','2020-09-15',NULL,N'Hà Nội',N'Cầu Giấy',N'Hà Nội',N'Bình Dương'),
+('240003',N'Lê Quốc Cường','2005-07-11',N'Nam',
+N'Hà Nội',N'Hà Nội',
+1,1,1,
+N'Hà Nội',
+'2020-09-15',NULL,
+N'Hà Nội',
+3,3,
+N'Bình Dương');
 
-('240004',N'Phạm Minh Đức','2005-05-06',N'Nam',N'Hải Phòng',N'Hải Phòng',N'Việt Nam',N'Kinh',N'Không',N'Hải Phòng','2020-09-15',NULL,N'Hải Phòng',N'Ngô Quyền',N'Hải Phòng',N'Bình Dương'),
+-----------------------------------------------------
+-- HỌC
+-----------------------------------------------------
 
-('240005',N'Hoàng Gia Hân','2005-04-01',N'Nữ',N'Cần Thơ',N'Cần Thơ',N'Việt Nam',N'Kinh',N'Không',N'Cần Thơ','2020-09-15',NULL,N'Cần Thơ',N'Ninh Kiều',N'Cần Thơ',N'Bình Dương'),
+INSERT INTO Hoc
+(MaSV,MaMH,HocKy,NamHoc,DiemA1,DiemA2,DiemA3)
+VALUES
 
-('240006',N'Ngô Thành Long','2005-08-22',N'Nam',N'Đồng Nai',N'Biên Hòa',N'Việt Nam',N'Kinh',N'Không',N'Biên Hòa','2020-09-15',NULL,N'Đồng Nai',N'Tân Hiệp',N'Đồng Nai',N'Bình Dương'),
+('240001','MH001',N'HK1','2025-2026',8.5,8.0,9.0),
+('240001','MH002',N'HK1','2025-2026',7.5,8.0,8.5),
 
-('240007',N'Võ Thanh Mai','2005-02-28',N'Nữ',N'Bình Định',N'Quy Nhơn',N'Việt Nam',N'Kinh',N'Không',N'Quy Nhơn','2020-09-15',NULL,N'Bình Định',N'Ghềnh Ráng',N'Bình Định',N'Bình Dương'),
+('240002','MH001',N'HK1','2025-2026',9.0,8.5,9.5),
+('240002','MH003',N'HK1','2025-2026',7.0,7.5,8.0),
 
-('240008',N'Đặng Quốc Nam','2005-09-18',N'Nam',N'Gia Lai',N'Pleiku',N'Việt Nam',N'Kinh',N'Không',N'Pleiku','2020-09-15',NULL,N'Gia Lai',N'Diên Hồng',N'Gia Lai',N'Bình Dương'),
-
-('240009',N'Bùi Hải Yến','2005-06-17',N'Nữ',N'Lâm Đồng',N'Đà Lạt',N'Việt Nam',N'Kinh',N'Không',N'Đà Lạt','2020-09-15',NULL,N'Lâm Đồng',N'Phường 1',N'Lâm Đồng',N'Bình Dương'),
-
-('240010',N'Đỗ Đức Phong','2005-12-10',N'Nam',N'Quảng Nam',N'Tam Kỳ',N'Việt Nam',N'Kinh',N'Không',N'Tam Kỳ','2020-09-15',NULL,N'Quảng Nam',N'An Mỹ',N'Quảng Nam',N'Bình Dương');
-
-INSERT INTO DangKyHoc(MaSV,MaMH,MaHK) VALUES
-('240001','MH001','HK01'),
-('240001','MH002','HK01'),
-
-('240002','MH001','HK01'),
-('240002','MH003','HK01'),
-
-('240003','MH002','HK01'),
-('240003','MH004','HK01'),
-
-('240004','MH001','HK01'),
-('240004','MH005','HK01'),
-
-('240005','MH003','HK01'),
-('240005','MH005','HK01'),
-
-('240006','MH002','HK01'),
-('240006','MH003','HK01'),
-
-('240007','MH004','HK01'),
-('240007','MH005','HK01'),
-
-('240008','MH001','HK01'),
-('240008','MH002','HK01'),
-
-('240009','MH003','HK01'),
-('240009','MH004','HK01'),
-
-('240010','MH002','HK01'),
-('240010','MH005','HK01');
-
-INSERT INTO DiemThi
-SELECT
-    MaDK,
-    ROUND(RAND(CHECKSUM(NEWID()))*4+6,2),
-    ROUND(RAND(CHECKSUM(NEWID()))*4+6,2),
-    ROUND(RAND(CHECKSUM(NEWID()))*4+6,2)
-FROM DangKyHoc;
+('240003','MH002',N'HK1','2025-2026',8.0,8.5,9.0),
+('240003','MH004',N'HK1','2025-2026',9.5,9.0,8.5);
+GO
 ```
